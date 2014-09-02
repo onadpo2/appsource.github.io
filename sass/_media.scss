@@ -1,0 +1,98 @@
+@media all and (min-width: 768px){
+  .appsource-logo{
+    height: 34px;
+  }
+
+}
+
+@media all and (min-width: 480px) and (max-width: 768px){
+  .appsource-logo{
+    position: absolute;
+    top: 6px;
+    height: 30px;  
+  }
+
+  #appsource-carousel #carousel-example-generic .item{
+    height: 520px;
+  }
+
+  .carousel-background{
+  }
+
+  .header-slider{
+    padding: 4px 10px;  
+    font-size: 18px !important;
+  }
+
+  .slider-content p{
+    font-size: 12px;  
+  }
+
+  .slider-one, .slider-two, .slider-three{
+    position: absolute;
+    width: 400px;
+    top: 150px;
+    left: 0;
+  }
+
+  #appsource-carousel .carousel-indicators li{
+    border-radius: 0;
+    width: 14px;
+    height: 14px;
+  }
+  #appsource-carousel .carousel-indicators .active{
+    width: 14px;
+    height: 14px;
+    margin: 1px;
+  }
+}
+
+@media all and (max-width: 480px){
+  .appsource-logo{
+    position: absolute;
+    top: 10px;
+    height: 24px;  
+  }
+
+  .top-navigation{
+    padding-left: 0;  
+  }
+
+  .top-navigation li a{
+    font-size: 10px;
+    margin: 0 4px !important;
+  }
+
+  #carousel-example-generic .item{
+    height: 420px;
+  }
+
+  .slider-content{
+    top: 80px !important;  
+  }
+
+  .header-slider{
+    padding: 4px 10px;  
+    font-size: 18px !important;
+  }
+
+  .slider-content{
+    width: 100%;  
+    top: 130px;
+  }
+
+  .header-slider{
+    padding: 4px 10px;  
+    font-size: 18px !important;
+  }
+
+  .slider-content p{
+    width: 100%;
+    font-size: 12px;  
+  }
+
+  .footer-get img{
+    width: 280px !important;  
+  }
+}
+

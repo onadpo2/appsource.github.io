@@ -12,3 +12,10 @@ source/stylesheets/screen.css
 vendor
 node_modules
 Gemfile.lock
+.*~
+*.swp
+*.swo
+.DS_Store
+.ruby-version
+
+
