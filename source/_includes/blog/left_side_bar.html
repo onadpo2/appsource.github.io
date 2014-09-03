@@ -1,0 +1,11 @@
+<div class='author-info'>
+  <img src='/images/nad.jpg' class='author-avatar'>
+  <p>posted by</p>
+  <p class='author'>{{ page.author }}</p>
+</div>
+<div class='feature-categories'>
+  <p>Featured Posts</p>
+  {% for cat in page.categories | titlecase %}
+  <p>{{ cat }}</p>
+  {% endfor %}
+</div>
