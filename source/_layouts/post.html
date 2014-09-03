@@ -12,8 +12,8 @@ layout: blog
   <article class="post-content">
     {{ content }}
   </article>
-  <div id="disqus_thread">
-  {% include disqus.html %}
-  </div>
+  {% if site.disqus_short_name and page.comments == true %}
+    {% include disqus.html %}
+  {% endif %}
 </div>
 

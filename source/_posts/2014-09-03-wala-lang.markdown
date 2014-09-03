@@ -2,9 +2,10 @@
 layout: post
 title:  "Write a Vim Plugin with TDD"
 date:   2014-08-27 18:04:25
-categories: ['RoR', 'Mobile Application']
+categories: ['Ruby on Rails', 'Mobile Application', 'Web Development', 'Angular JS']
 author: Nad Flores
 image_header: "infra2.jpg"
+comments: true
 ---
 
 My colleague Chris Toomey and I are writing a Vim plugin called vim-spec-runner that runs RSpec and JavaScript tests. We’re test-driving it and learned a lot.

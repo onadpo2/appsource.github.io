@@ -9,6 +9,9 @@
 
           <div class="col-sm-2 left-side-bar">
             {% include blog/left_side_bar.html %}
+            {% unless page.sharing == false %}
+              {% include post/sharing.html %}
+            {% endunless %}
           </div>
 
           <div class="col-sm-7">
