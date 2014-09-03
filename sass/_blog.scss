@@ -110,3 +110,19 @@ ul.blog-list span{
   color: rgb(81, 81, 81);
 }
 
+#categories{
+  li.category{
+    padding: 10px 0;  
+    border-bottom: 1px solid #e0e0e0;
+    webkit-box-shadow: #fff 0 1px;
+    -moz-box-shadow: #fff 0 1px;
+    box-shadow: #fff 0 1px;
+  }
+
+  a:visited{
+    color: #515151;  
+  }
+  a:hover{
+    color: orange;  
+  }
+}
