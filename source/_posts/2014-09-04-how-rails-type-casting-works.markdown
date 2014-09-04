@@ -20,6 +20,7 @@ store_listing = StoreListing.new
 store_listing.price_in_cents = "100" # Note, this is a string
 store_listing.price_in_cents # => 100
 ```
+<!--more-->
 
 This is because Active Record automatically type casts all input so that it matches the database schema. Depending on the type, this may be incredibly simple, or extremely complex. Let’s take a look into how the internals work in 4.1.
 

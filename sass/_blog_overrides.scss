@@ -25,3 +25,33 @@
     color: #aaa;  
   }
 }
+
+.blog-index{
+  .blog-archives{
+    padding: 4px 12px;
+    color: #fff;  
+    background: #555;
+    font-size: 24px;
+    &:hover{ color: orange;}
+  }
+  article h1 a{
+    font-size: 30px;
+    color: orange;
+    &:hover{color: #aaa;}
+  }
+
+  footer a{
+    padding: 4px 8px;
+    background: #555;  
+    color: white;
+  }
+  .pagination a{
+    padding: 4px 8px;
+    background: #555;  
+    color: white;
+  }
+
+  .pagination{
+    margin-left: 0 !important;
+  }
+}

@@ -7,7 +7,7 @@ comments: true
 categories: ["Ruby"]
 has_image: false
 ---
-====================
+
 Ruby 2.0 introduced first-class support for keyword arguments:
 
 ``` ruby
@@ -18,6 +18,7 @@ end
 foo # => 'default'
 foo(bar: 'baz') # => 'baz'
 ```
+<!--more-->
 
 In Ruby 1.9, we could do something similar using a single Hash parameter:
 

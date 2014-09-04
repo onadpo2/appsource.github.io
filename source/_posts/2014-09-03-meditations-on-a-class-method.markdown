@@ -9,6 +9,7 @@ categories: [Good Code, Ruby]
 ---
 
 I keep a file of code I like. When looking for inspiration, I read through the file. It’s short; I often re-write the samples to be nothing but the minimally inspiring thought.
+<!--more-->
 
 Here is the first snippet:
 
