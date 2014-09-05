@@ -2,9 +2,9 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://AppSource.github.io
+url: http://www.appsource.biz
 title: AppSource Inc
-subtitle: A blogging framework for hackers.
+subtitle:
 author: AppSource Inc.
 simple_search: https://www.google.com/search
 description:
