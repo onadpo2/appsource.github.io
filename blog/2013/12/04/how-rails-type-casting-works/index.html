@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>How Rails&#8217; Type Casting Works | AppSource Inc</title>
+  <meta name="author" content="AppSource Inc.">
+
+  
+  <meta name="description" content="How Rails' Type Casting Works Dec 4, 2013 Have you ever noticed that when you assign a property to an Active Record model and read it back, the &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.appsource.biz/blog/2013/12/04/how-rails-type-casting-works">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="AppSource Inc" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+  <body>
+    <section id="back-to-home">
+  <div class="container">
+    <div class="row">
+      <a href="/">
+        BACK TO HOME
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="top-margin">
+  <div class="top-yellow"></div>
+  <div class="top-orange"></div>
+  <div class="top-blue"></div>
+  <div class="top-green"></div>
+  <div class="top-yellow"></div>
+  <div class="top-orange"></div>
+  <div class="top-blue"></div>
+  <div class="top-green"></div>
+  <div class="top-yellow"></div>
+  <div class="top-orange"></div>
+</section>
+
+<section id="blog-header">
+  <div class="container">
+    <div class="row">
+      <a href="/blog">
+        <img src="/images/blog.png" class="blog-logo"/>
+      </a>
+      <p>We love keeping you informed of the latest trend in the tech industry.</p>
+    </div>
+  </div>
+</section>
+
+
+    <section id="blog-content">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-sm-2 left-side-bar">
+            <div class='author-info'>
+  <img src='/images/nad.jpg' class='author-avatar'>
+  <p>posted by</p>
+  <p class='author'></p>
+</div>
+<div class='feature-categories'>
+  <p>Featured Posts</p>
+  
+  <p>rails</p>
+  
+  <p>ruby</p>
+  
+</div>
+
+            
+              <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.appsource.biz/blog/2013/12/04/how-rails-type-casting-works/" data-via="" data-counturl="http://www.appsource.biz/blog/2013/12/04/how-rails-type-casting-works/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+
+            
+          </div>
+
+          <div class="col-sm-7">
+            <div class="post">
+  
+  <header class="post-header">
+    <h1 class="post-title">How Rails&#8217; Type Casting Works</h1>
+    <p class="post-meta">Dec 4, 2013</p>
+  </header>
+
+  <article class="post-content">
+    <p>Have you ever noticed that when you assign a property to an Active Record model and read it back, the value isn’t always the same? Here’s an example:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">StoreListing</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>  <span class="n">connection</span><span class="o">.</span><span class="n">create_table</span> <span class="ss">:store_listings</span><span class="p">,</span> <span class="ss">force</span><span class="p">:</span> <span class="kp">true</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">t</span><span class="o">.</span><span class="n">integer</span> <span class="ss">:price_in_cents</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">store_listing</span> <span class="o">=</span> <span class="no">StoreListing</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">store_listing</span><span class="o">.</span><span class="n">price_in_cents</span> <span class="o">=</span> <span class="s2">&quot;100&quot;</span> <span class="c1"># Note, this is a string</span>
+</span><span class='line'><span class="n">store_listing</span><span class="o">.</span><span class="n">price_in_cents</span> <span class="c1"># =&gt; 100</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<!--more-->
+
+
+<p>This is because Active Record automatically type casts all input so that it matches the database schema. Depending on the type, this may be incredibly simple, or extremely complex. Let’s take a look into how the internals work in 4.1.</p>
+
+<p>The first method we need to understand in the above code is where the price_in_cents method is defined. In older versions of Rails, your models would go look up the database schema and define the attribute methods as soon as it was loaded. However, this caused problems on platforms like Heroku, where you might want to load the application when you don’t have a real database connection.</p>
+
+<p>Today, the loading is lazy, and happens in a call to <code>method_missing</code> (source). The important line here is the call to <code>define_attribute_methods</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">method_missing</span><span class="p">(</span><span class="nb">method</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">block</span><span class="p">)</span> <span class="c1"># :nodoc:</span>
+</span><span class='line'>  <span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">define_attribute_methods</span>
+</span><span class='line'>  <span class="k">if</span> <span class="n">respond_to_without_attributes?</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span>
+</span><span class='line'>    <span class="c1"># make sure to invoke the correct attribute method, as we might have gotten here via a `super`</span>
+</span><span class='line'>    <span class="c1"># call in a overwritten attribute method</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">attribute_method</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">find_generated_attribute_method</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span>
+</span><span class='line'>      <span class="c1"># this is probably horribly slow, but should only happen at most once for a given AR class</span>
+</span><span class='line'>      <span class="n">attribute_method</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">block</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="k">return</span> <span class="k">super</span> <span class="k">unless</span> <span class="n">respond_to_missing?</span><span class="p">(</span><span class="nb">method</span><span class="p">,</span> <span class="kp">true</span><span class="p">)</span>
+</span><span class='line'>      <span class="nb">send</span><span class="p">(</span><span class="nb">method</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">block</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">else</span>
+</span><span class='line'>    <span class="k">super</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Active Record’s definition of <code>define_attribute_methods</code> does little of note, other than call super with <code>column_names</code> (source).</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">define_attribute_methods</span> <span class="c1"># :nodoc:</span>
+</span><span class='line'>  <span class="k">return</span> <span class="kp">false</span> <span class="k">if</span> <span class="vi">@attribute_methods_generated</span>
+</span><span class='line'>  <span class="c1"># Use a mutex; we don&#39;t want two thread simultaneously trying to define</span>
+</span><span class='line'>  <span class="c1"># attribute methods.</span>
+</span><span class='line'>  <span class="n">generated_attribute_methods</span><span class="o">.</span><span class="n">synchronize</span> <span class="k">do</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kp">false</span> <span class="k">if</span> <span class="vi">@attribute_methods_generated</span>
+</span><span class='line'>    <span class="n">superclass</span><span class="o">.</span><span class="n">define_attribute_methods</span> <span class="k">unless</span> <span class="nb">self</span> <span class="o">==</span> <span class="n">base_class</span>
+</span><span class='line'>    <span class="k">super</span><span class="p">(</span><span class="n">column_names</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@attribute_methods_generated</span> <span class="o">=</span> <span class="kp">true</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="kp">true</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We won’t look into how <code>column_names</code> gets determined today, but that method call is what causes Rails to go perform the SQL query that loads information about the model’s schema. Inside of Active Model, we’ll do some metaprogramming magic and ultimately end up calling <code>define_method_attribute</code> (source). Finally, in the body of <code>define_method_attribute</code>, we can see the method that gets called is <code>read_attribute</code> (source). Quite a bit of legwork!</p>
+
+<p>If you decide to read along with us, make sure you’re on the 4-1-stable branch. A lot of this code has changed significantly on master. One of the most important changes to keep in mind is that <code>@attributes_cache</code> has been renamed to @attributes, and @attributes has been renamed to <code>@raw_attributes</code>.</p>
+
+<p>The body of <code>read_attribute</code> looks like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">read_attribute</span><span class="p">(</span><span class="n">attr_name</span><span class="p">)</span>
+</span><span class='line'>  <span class="c1"># If it&#39;s cached, just return it</span>
+</span><span class='line'>  <span class="c1"># We use #[] first as a perf optimization for non-nil values. See https://gist.github.com/jonleighton/3552829.</span>
+</span><span class='line'>  <span class="nb">name</span> <span class="o">=</span> <span class="n">attr_name</span><span class="o">.</span><span class="n">to_s</span>
+</span><span class='line'>  <span class="vi">@attributes_cache</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span> <span class="o">||</span> <span class="vi">@attributes_cache</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">column</span> <span class="o">=</span> <span class="vi">@column_types_override</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span> <span class="k">if</span> <span class="vi">@column_types_override</span>
+</span><span class='line'>    <span class="n">column</span> <span class="o">||=</span> <span class="vi">@column_types</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="vi">@attributes</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="nb">name</span> <span class="o">==</span> <span class="s1">&#39;id&#39;</span> <span class="o">&amp;&amp;</span> <span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">primary_key</span> <span class="o">!=</span> <span class="nb">name</span>
+</span><span class='line'>        <span class="n">read_attribute</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">primary_key</span><span class="p">)</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">unless</span> <span class="n">column</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">value</span> <span class="o">=</span> <span class="vi">@attributes</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nb">block_given?</span> <span class="p">?</span> <span class="k">yield</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span> <span class="p">:</span> <span class="kp">nil</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">cache_attribute?</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+</span><span class='line'>      <span class="vi">@attributes_cache</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span> <span class="o">=</span> <span class="n">column</span><span class="o">.</span><span class="n">type_cast</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="n">column</span><span class="o">.</span><span class="n">type_cast</span> <span class="n">value</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Let’s go through each segment and understand what it’s doing. First we call <code>to_s</code> on the argument, as it’s possible we were passed a symbol (this method is part of the public API). Next we check to see if we’ve already type cast this attribute, as we cache the results. The next line is not always obvious.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">column</span> <span class="o">=</span> <span class="vi">@column_types_override</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span> <span class="k">if</span> <span class="vi">@column_types_override</span>
+</span><span class='line'><span class="n">column</span> <span class="o">||=</span> <span class="vi">@column_types</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>@column_types_override</code> is sometimes given to us when the model in question was built as part of the result of a SQL query. If you’ve done something like</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Post</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">joins</span><span class="p">(</span><span class="ss">:comments</span><span class="p">)</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;posts.*, COUNT(comments.*) AS comments_count&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;comments.post_id&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>then we sometimes have to do additional leg work to type cast the count to an integer. If you ran that code while using the MySQL adapter or PostgreSQL adapter (keep in mind that most MySQL users are using the MySQL2 adapter), then @column_types_override would look like: <code>{ 'comments_count' =&gt; an_object_that_type_casts_to_int }</code>. Continuing to the next line, <code>@column_types</code> will contain the column object that is crucial to this behavior, except for a few special cases (which we will have to cover another time).</p>
+
+<p>The next block of code causes model.id to return the primary key, even if the primary key for the table is a column other than id.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">return</span> <span class="vi">@attributes</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="nb">name</span> <span class="o">==</span> <span class="s1">&#39;id&#39;</span> <span class="o">&amp;&amp;</span> <span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">primary_key</span> <span class="o">!=</span> <span class="nb">name</span>
+</span><span class='line'>    <span class="n">read_attribute</span><span class="p">(</span><span class="nb">self</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">primary_key</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="p">}</span> <span class="k">unless</span> <span class="n">column</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Next we need to grab the raw, un-typecast version of the attribute, which came either from user input, or from the database (“user” in this case refers to you, the programmer using Rails). However, there’s an interesting fork in behavior here.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">value</span> <span class="o">=</span> <span class="vi">@attributes</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nb">block_given?</span> <span class="p">?</span> <span class="k">yield</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span> <span class="p">:</span> <span class="kp">nil</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The first question is whether or not a block was given. This is based on how read_attribute ended up being called. If you called it as post.title, no block would have been given. If you called it as post[:title], then a block would have been given to raise an exception. The reason that the title method would exist in this case, even if we don’t have a &lsquo;title&rsquo; key in our attributes hash is: you performed a custom select statement. (This is an excellent example of how one feature can cause a surprising amount of complexity if not sufficiently isolated).</p>
+
+<p>The conditional around caching attributes is actually bugged, and will always return true for most users, so we’ll ignore it. This leaves us with the line of importance:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="vi">@attributes_cache</span><span class="o">[</span><span class="nb">name</span><span class="o">]</span> <span class="o">=</span> <span class="n">column</span><span class="o">.</span><span class="n">type_cast</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>column in this case, will be an instance of ActiveRecord::ConnectionAdapters::Column, or one of its adapter specific subclasses. The behavior in question lives on the type_cast method (source).</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># Casts value (which is a String) to an appropriate instance.</span>
+</span><span class='line'><span class="k">def</span> <span class="nf">type_cast</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">return</span> <span class="kp">nil</span> <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">nil?</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">coder</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">if</span> <span class="n">encoded?</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">klass</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">class</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">case</span> <span class="n">type</span>
+</span><span class='line'>  <span class="k">when</span> <span class="ss">:string</span><span class="p">,</span> <span class="ss">:text</span>        <span class="k">then</span> <span class="n">value</span>
+</span><span class='line'>  <span class="k">when</span> <span class="ss">:integer</span>              <span class="k">then</span> <span class="n">klass</span><span class="o">.</span><span class="n">value_to_integer</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">when</span> <span class="ss">:float</span>                <span class="k">then</span> <span class="n">value</span><span class="o">.</span><span class="n">to_f</span>
+</span><span class='line'>  <span class="k">when</span> <span class="ss">:decimal</span>              <span class="k">then</span> <span class="n">klass</span><span class="o">.</span><span class="n">value_to_decimal</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">when</span> <span class="ss">:datetime</span><span class="p">,</span> <span class="ss">:timestamp</span> <span class="k">then</span> <span class="n">klass</span><span class="o">.</span><span class="n">string_to_time</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">when</span> <span class="ss">:time</span>                 <span class="k">then</span> <span class="n">klass</span><span class="o">.</span><span class="n">string_to_dummy_time</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">when</span> <span class="ss">:date</span>                 <span class="k">then</span> <span class="n">klass</span><span class="o">.</span><span class="n">value_to_date</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">when</span> <span class="ss">:binary</span>               <span class="k">then</span> <span class="n">klass</span><span class="o">.</span><span class="n">binary_to_string</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">when</span> <span class="ss">:boolean</span>              <span class="k">then</span> <span class="n">klass</span><span class="o">.</span><span class="n">value_to_boolean</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span class='line'>  <span class="k">else</span> <span class="n">value</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As any good method should, we start with an extremely misleading comment (the value will be anything you passed to the writer, not a string). Like many methods in Column, we also have a case statement based on type, and will call one of many helper methods based on which type it is. type will have been set back in the constructor, by using a regex from the sql_type source. sql_type will be the raw type string from the database schema, such as varchar(255).</p>
+
+<p>At this point, the behavior is linear. All of the helper methods called exist in the class, and most are no more than a few lines long.</p>
+
+<p>Also of note is the method type_cast_for_write, which gets called during the writer, before we store the attributes for type casting later. (Note: Anything that happens in this method will be applied to the _before_type_cast version of the attribute as well.)</p>
+
+<p>If you’ve been cringing looking through the Column class, you’re justified. Luckily, it’s gotten much better. In preparation for adding a public API to hook into the type casting behavior in 4.2, this class has been heavily refactored to focus on polymorphism, rather than conditionals and regular expressions. In part 2, we’ll dig into some of the refactoring that’s been done, and the decisions behind it.</p>
+
+  </article>
+  
+    <section>
+  <h1>Comments</h1>
+  <div id="disqus_thread"></div>
+</section>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = "appsource"; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+  
+</div>
+
+
+          </div>
+
+          <div class="col-sm-3 hidden-xs right-side-bar">
+            <h1>AppSource Inc.</h1>
+<p>AppSource is a company borne out of a passion for technology and an inherent aptitude for business. I.T. may be our core competency, but our knowledge in business helps us identify the best ways to serve our clients. With a staff of highly qualified individuals, versed in the latest technology, our company is prepared to take on any challenge, big or small.</p>
+
+<section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/good-code/'>good code (1)</a></li>
+<li class='category'><a href='/blog/categories/rails/'>rails (1)</a></li>
+<li class='category'><a href='/blog/categories/ruby/'>ruby (3)</a></li>
+
+  </ul>
+</section>
+
+
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+    <section id="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="footer-get">
+          <h1>Get &nbsp;in &nbsp;Touch</h1>
+          <a href="https://maps.google.com/maps?f=d&amp;source=s_q&amp;hl=en&amp;geocode=%3BCQlbFE2_0HmAFcWd3gAdVjo3BynvWuncGciXMzHNRBAqjIqGSA&amp;q=Appsource+Inc.,+Metro+Manila,+Philippines&amp;aq=0&amp;oq=appsource&amp;sll=14.589434,121.060029&amp;sspn=0.003104,0.006105&amp;ie=UTF8&amp;hq=Appsource+Inc.,+Metro+Manila,+Philippines&amp;hnear=&amp;radius=15000&amp;t=m&amp;z=13&amp;vpsrc=0&amp;iwloc=A&amp;daddr=Appsource+Inc.,+Unit+1401,+Robinsons+Equitable+Tower,+ADB+Avenue+corner+Poveda+Road,+Ortigas+Center+1605,+Philippines">
+            <img class="block" id="u1511_img" src="/images/map.jpg" alt="">
+          </a>
+          <p>
+            Unit 601 Tower B, BSA Twin Towers,<br>
+            Bank Drive, Ortigas Centre,<br>
+            Mandaluyong City 1550 Philippines<br>
+            Office Hours 9:00 AM - 5:00 PM
+          </p>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="footer-call">
+          <h1>Call &nbsp;Us</h1>
+          <p>
+            <img src="/images/phone.png" alt="" width="14" height="14"> Phone: +632 696 APPS<br>
+            &nbsp;&nbsp;&nbsp;&nbsp; Telefax: (02) 477 APPS<br>
+            <img src="/images/mobile.png" alt="" width="9" height="15">&nbsp;&nbsp; Mobile: +63 917 839-APPS
+          </p>
+        </div>
+        <div class="footer-email">
+          <h1>Email &nbsp;Us</h1>
+          <p>
+            For Information: <a href="mailto:info@appsource.biz">info@appsource.biz</a><br>
+            For Job Applications: <a href="mailto:join@appsource.biz">join@appsource.biz</a><br>
+            For Technical Support: <a href="mailto:support@appsource.biz">support@appsource.biz</a><br>
+            For Billing Concerns: <a href="mailto:billing@appsource.biz">billing@appsource.biz</a><br>
+            Managing Director: <a href="mailto:mcantero@appsource.biz">mcantero@appsource.biz</a>
+          </p>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="footer-work">
+          <h1>Work &nbsp;with &nbsp;Us</h1>
+
+          <form action="http://getsimpleform.com/messages?form_api_token=8b4160fbad5bb0ae7e3167e5bc085acf" method="post">
+            <div class="form-group">
+              <input name='full_name' type="text" class="form-control" id="exampleInputEmail2" placeholder="Name" required>
+            </div>
+            <div class="form-group">
+              <input name='email' type="email" class="form-control" id="exampleInputEmail2" placeholder="Email" required>
+            </div>
+            <div class="form-group">
+              <input name='subject' type="text" class="form-control" id="exampleInputEmail2" placeholder="Subject">
+            </div>
+            <div class="form-group">
+              <textarea name='message' placeholder="Message" style="width: 100%;" required></textarea>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="send col-xs-12">Send Message</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+  </body>
+</html>
+

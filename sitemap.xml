@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  
+  <url>
+    <loc>http://www.appsource.biz/blog/2014/09/03/meditations-on-a-class-method/</loc>
+    <lastmod>2014-09-03T23:26:04+08:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.appsource.biz/blog/2014/08/03/ruby-2-keyword-arguments/</loc>
+    <lastmod>2014-08-03T23:44:33+08:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.appsource.biz/blog/2013/12/04/how-rails-type-casting-works/</loc>
+    <lastmod>2013-12-04T00:04:20+08:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  
+  
+  <url>
+    <loc>http://www.appsource.biz/blog/</loc>
+    <lastmod>2014-09-05T13:32:51+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.appsource.biz/about_us/</loc>
+    <lastmod>2014-09-05T13:32:51+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.appsource.biz/appsdev/</loc>
+    <lastmod>2014-09-05T13:32:51+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.appsource.biz/blog/archives/</loc>
+    <lastmod>2014-09-05T13:32:51+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.appsource.biz/staffing/</loc>
+    <lastmod>2014-09-05T13:32:51+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.appsource.biz/infrastructure/</loc>
+    <lastmod>2014-09-05T13:32:51+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.appsource.biz/</loc>
+    <lastmod>2014-09-05T13:32:51+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  
+</urlset>

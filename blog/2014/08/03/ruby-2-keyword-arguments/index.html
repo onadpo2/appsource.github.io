@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Ruby 2 Keyword Arguments | AppSource Inc</title>
+  <meta name="author" content="AppSource Inc.">
+
+  
+  <meta name="description" content="Ruby 2 Keyword Arguments Aug 3, 2014 Ruby 2.0 introduced first-class support for keyword arguments: 1
+2
+3
+4
+5
+6
+def foo(bar: &#39;default&#39;) puts &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.appsource.biz/blog/2014/08/03/ruby-2-keyword-arguments">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="AppSource Inc" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+  <body>
+    <section id="back-to-home">
+  <div class="container">
+    <div class="row">
+      <a href="/">
+        BACK TO HOME
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="top-margin">
+  <div class="top-yellow"></div>
+  <div class="top-orange"></div>
+  <div class="top-blue"></div>
+  <div class="top-green"></div>
+  <div class="top-yellow"></div>
+  <div class="top-orange"></div>
+  <div class="top-blue"></div>
+  <div class="top-green"></div>
+  <div class="top-yellow"></div>
+  <div class="top-orange"></div>
+</section>
+
+<section id="blog-header">
+  <div class="container">
+    <div class="row">
+      <a href="/blog">
+        <img src="/images/blog.png" class="blog-logo"/>
+      </a>
+      <p>We love keeping you informed of the latest trend in the tech industry.</p>
+    </div>
+  </div>
+</section>
+
+
+    <section id="blog-content">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-sm-2 left-side-bar">
+            <div class='author-info'>
+  <img src='/images/nad.jpg' class='author-avatar'>
+  <p>posted by</p>
+  <p class='author'>Nad Flores</p>
+</div>
+<div class='feature-categories'>
+  <p>Featured Posts</p>
+  
+  <p>ruby</p>
+  
+</div>
+
+            
+              <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.appsource.biz/blog/2014/08/03/ruby-2-keyword-arguments/" data-via="" data-counturl="http://www.appsource.biz/blog/2014/08/03/ruby-2-keyword-arguments/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+
+            
+          </div>
+
+          <div class="col-sm-7">
+            <div class="post">
+  
+  <header class="post-header">
+    <h1 class="post-title">Ruby 2 Keyword Arguments</h1>
+    <p class="post-meta">Aug 3, 2014</p>
+  </header>
+
+  <article class="post-content">
+    <p>Ruby 2.0 introduced first-class support for keyword arguments:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="ss">bar</span><span class="p">:</span> <span class="s1">&#39;default&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="n">bar</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">foo</span> <span class="c1"># =&gt; &#39;default&#39;</span>
+</span><span class='line'><span class="n">foo</span><span class="p">(</span><span class="ss">bar</span><span class="p">:</span> <span class="s1">&#39;baz&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &#39;baz&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<!--more-->
+
+
+<p>In Ruby 1.9, we could do something similar using a single Hash parameter:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="n">options</span> <span class="o">=</span> <span class="p">{})</span>
+</span><span class='line'>  <span class="n">bar</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="ss">:bar</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="n">bar</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">foo</span> <span class="c1"># =&gt; &#39;default&#39;</span>
+</span><span class='line'><span class="n">foo</span><span class="p">(</span><span class="ss">bar</span><span class="p">:</span> <span class="s1">&#39;baz&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &#39;baz&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ruby 2.0 blocks can also be defined with keyword arguments:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">define_method</span><span class="p">(</span><span class="ss">:foo</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="ss">bar</span><span class="p">:</span> <span class="s1">&#39;default&#39;</span><span class="o">|</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="n">bar</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">foo</span> <span class="c1"># =&gt; &#39;default&#39;</span>
+</span><span class='line'><span class="n">foo</span><span class="p">(</span><span class="ss">bar</span><span class="p">:</span> <span class="s1">&#39;baz&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &#39;baz&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Again, to achieve similar behavior in Ruby 1.9, the block would take an options hash, from which we would extract argument values.</p>
+
+<p><strong>Required keyword arguments</strong></p>
+
+<p>Unfortunately, Ruby 2.0 doesn’t have built-in support for required keyword arguments. Luckily, Ruby 2.1 introduced required keyword arguments, which are defined with a trailing colon:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span><span class="ss">bar</span><span class="p">:)</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="n">bar</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">foo</span> <span class="c1"># =&gt; ArgumentError: missing keyword: bar</span>
+</span><span class='line'><span class="n">foo</span><span class="p">(</span><span class="ss">bar</span><span class="p">:</span> <span class="s1">&#39;baz&#39;</span><span class="p">)</span> <span class="c1"># =&gt; &#39;baz&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If a required keyword argument is missing, Ruby will raise a useful ArgumentError that tells us which required argument we must include.</p>
+
+<p><strong>Keyword arguments vs options hash</strong></p>
+
+<p>With first-class keyword arguments in the language, we don’t have to write the boilerplate code to extract hash options. Unnecessary boilerplate code increases the opportunity for typos and bugs.</p>
+
+<p>With keyword arguments defined in the method signature itself, we can immediately discover the names of the arguments without having to read the body of the method.</p>
+
+<p>Note that the calling code is syntactically equal to calling a method with hash arguments, which makes for an easy transition from options hashes to keyword arguments.</p>
+
+<p><strong>Keyword arguments vs positional arguments</strong></p>
+
+<p>Assume we have a method with positional arguments:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">mysterious_total</span><span class="p">(</span><span class="n">subtotal</span><span class="p">,</span> <span class="n">tax</span><span class="p">,</span> <span class="n">discount</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">subtotal</span> <span class="o">+</span> <span class="n">tax</span> <span class="o">-</span> <span class="n">discount</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">mysterious_total</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="c1"># =&gt; 105</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This method does its job, but as a reader of the code using the mysterious_total method, I have no idea what those arguments mean without looking up the implementation of the method.</p>
+
+<p>By using keyword arguments, we know what the arguments mean without looking up the implementation of the called method:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">obvious_total</span><span class="p">(</span><span class="ss">subtotal</span><span class="p">:,</span> <span class="ss">tax</span><span class="p">:,</span> <span class="ss">discount</span><span class="p">:)</span>
+</span><span class='line'>  <span class="n">subtotal</span> <span class="o">+</span> <span class="n">tax</span> <span class="o">-</span> <span class="n">discount</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">obvious_total</span><span class="p">(</span><span class="ss">subtotal</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="ss">tax</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="ss">discount</span><span class="p">:</span> <span class="mi">5</span><span class="p">)</span> <span class="c1"># =&gt; 105</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Keyword arguments allow us to switch the order of the arguments, without affecting the behavior of the method:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">obvious_total</span><span class="p">(</span><span class="ss">subtotal</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="ss">discount</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="ss">tax</span><span class="p">:</span> <span class="mi">10</span><span class="p">)</span> <span class="c1"># =&gt; 105</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If we switch the order of the positional arguments, we are not going to get the same results, giving our customers more of a discount than they deserve:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">mysterious_total</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="c1"># =&gt; 95</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Connascence and trade-offs</strong></p>
+
+<p><em>Connascence between two software components A and B means either 1) that you can postulate some change to A that would require B to be changed (or at least carefully checked) in order to preserve overall correctness, or 2) that you can postulate some change that would require both A and B to be changed together in order to preserve overall correctness. - Meilir Page-Jones, What Every Programmer Should Know About Object-Oriented Design</em></p>
+
+<p>When one Ruby method has to know the correct order of another method’s positional arguments, we end up with connascence of position.</p>
+
+<p>If we decide to change the order of the parameters to <code>mysterious_total</code>, we must change all callers of that method accordingly. Not only that, but our mental model of how to use this method must change as well, which isn’t as simple as a find/replace.</p>
+
+<p>Like most things, keyword arguments have their trade-offs. Positional arguments offer a more succinct way to call a method. Usually, the code clarity and maintainability gained from keyword arguments outweigh the terseness offered by positional arguments. I would use positional arguments if I could easily guess their meanings based on the method’s name, but I find this rarely to be the case.</p>
+
+  </article>
+  
+    <section>
+  <h1>Comments</h1>
+  <div id="disqus_thread"></div>
+</section>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = "appsource"; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+  
+</div>
+
+
+          </div>
+
+          <div class="col-sm-3 hidden-xs right-side-bar">
+            <h1>AppSource Inc.</h1>
+<p>AppSource is a company borne out of a passion for technology and an inherent aptitude for business. I.T. may be our core competency, but our knowledge in business helps us identify the best ways to serve our clients. With a staff of highly qualified individuals, versed in the latest technology, our company is prepared to take on any challenge, big or small.</p>
+
+<section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/good-code/'>good code (1)</a></li>
+<li class='category'><a href='/blog/categories/rails/'>rails (1)</a></li>
+<li class='category'><a href='/blog/categories/ruby/'>ruby (3)</a></li>
+
+  </ul>
+</section>
+
+
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+    <section id="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="footer-get">
+          <h1>Get &nbsp;in &nbsp;Touch</h1>
+          <a href="https://maps.google.com/maps?f=d&amp;source=s_q&amp;hl=en&amp;geocode=%3BCQlbFE2_0HmAFcWd3gAdVjo3BynvWuncGciXMzHNRBAqjIqGSA&amp;q=Appsource+Inc.,+Metro+Manila,+Philippines&amp;aq=0&amp;oq=appsource&amp;sll=14.589434,121.060029&amp;sspn=0.003104,0.006105&amp;ie=UTF8&amp;hq=Appsource+Inc.,+Metro+Manila,+Philippines&amp;hnear=&amp;radius=15000&amp;t=m&amp;z=13&amp;vpsrc=0&amp;iwloc=A&amp;daddr=Appsource+Inc.,+Unit+1401,+Robinsons+Equitable+Tower,+ADB+Avenue+corner+Poveda+Road,+Ortigas+Center+1605,+Philippines">
+            <img class="block" id="u1511_img" src="/images/map.jpg" alt="">
+          </a>
+          <p>
+            Unit 601 Tower B, BSA Twin Towers,<br>
+            Bank Drive, Ortigas Centre,<br>
+            Mandaluyong City 1550 Philippines<br>
+            Office Hours 9:00 AM - 5:00 PM
+          </p>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="footer-call">
+          <h1>Call &nbsp;Us</h1>
+          <p>
+            <img src="/images/phone.png" alt="" width="14" height="14"> Phone: +632 696 APPS<br>
+            &nbsp;&nbsp;&nbsp;&nbsp; Telefax: (02) 477 APPS<br>
+            <img src="/images/mobile.png" alt="" width="9" height="15">&nbsp;&nbsp; Mobile: +63 917 839-APPS
+          </p>
+        </div>
+        <div class="footer-email">
+          <h1>Email &nbsp;Us</h1>
+          <p>
+            For Information: <a href="mailto:info@appsource.biz">info@appsource.biz</a><br>
+            For Job Applications: <a href="mailto:join@appsource.biz">join@appsource.biz</a><br>
+            For Technical Support: <a href="mailto:support@appsource.biz">support@appsource.biz</a><br>
+            For Billing Concerns: <a href="mailto:billing@appsource.biz">billing@appsource.biz</a><br>
+            Managing Director: <a href="mailto:mcantero@appsource.biz">mcantero@appsource.biz</a>
+          </p>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="footer-work">
+          <h1>Work &nbsp;with &nbsp;Us</h1>
+
+          <form action="http://getsimpleform.com/messages?form_api_token=8b4160fbad5bb0ae7e3167e5bc085acf" method="post">
+            <div class="form-group">
+              <input name='full_name' type="text" class="form-control" id="exampleInputEmail2" placeholder="Name" required>
+            </div>
+            <div class="form-group">
+              <input name='email' type="email" class="form-control" id="exampleInputEmail2" placeholder="Email" required>
+            </div>
+            <div class="form-group">
+              <input name='subject' type="text" class="form-control" id="exampleInputEmail2" placeholder="Subject">
+            </div>
+            <div class="form-group">
+              <textarea name='message' placeholder="Message" style="width: 100%;" required></textarea>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="send col-xs-12">Send Message</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+  </body>
+</html>
+
